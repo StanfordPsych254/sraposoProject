@@ -1,0 +1,61 @@
+---
+title: "Preliminary Replication Report" 
+author: "Sarah Raposo"
+date: "February 12, 2016"
+output: html_document
+---
+
+#### Replication of *When Does the Future Begin? Time Metrics Matter, Connecting Present and Future Selves* (Study 4) by Lewis & Oyserman (2015, *Psychological Science*)
+
+<center>Neil A. Lewis, Jr. & Daphna Oyserman
+<br><a href="mailto:daphna.oyserman@gmail.com">daphna.oyserman@gmail.com</a></center>
+
+<br><br><center>**Introduction**</center>
+
+<br> &nbsp; &nbsp; &nbsp; &nbsp; People do not save enough for retirement. This may be in part because retirement feels very far away, especially to young people. Study 4 in this paper aimed to elucidate whether having people think about retirement in terms of fine-grained (e.g., days) vs. gross-grained (e.g., years) time metrics impacts when they think they should begin to save for retirement. A secondary goal was to examine whether people think they should save a different amount for retirement when asked how much they should save incrementally, as a function of the time metric they say (i.e., days or years; "incremental action") or how much they should save overall.
+
+&nbsp; &nbsp; &nbsp; &nbsp; In the original study, the authors found that people who read that retirement would begin in 10,950 days said they would wait *less time* to begin saving for retirement compared to those who read that retirement would begin in 30 years (equivalent to 10,950 days), *F*(1,115) = 7.497, *p* = .007, *d* = 0.51. These analyses controlled for participants' age, education, and income, but also held when not controlling for these varaibles There was no effect of incremental action condition, nor was there a significant interaction.  
+
+&nbsp; &nbsp; &nbsp; &nbsp; Furthermore, neither time metric condition, nor incremental action condition (i.e., amount they should save daily/yearly vs. overall), had an effect on the amount that participants said they should save for retirement. There was also no significant interaction. These results suggest that having people think about their retirement in terms of days may encourage them to start saving sooner than those who think about their retirement in the traditional time metric of years.
+
+<center>**Methods**</center>
+
+**Power Analysis**
+
+&nbsp; &nbsp; &nbsp; &nbsp; The reported effect size for the original statistically significant main effect with 122 participants was d = 0.51. Post-hoc power calculation indicated that power for the original study was 0.79. Assuming an effect size of d = 0.51, I would require N = 123 to achieve 80% power, N = 164 to achieve 90% power, and N = 202 to achieve 95% power. I will aim to achieve 90% power, so will require a sample size of N = 164. This sample size gives me confidence that I should find an effect if it is present - especially given the medium effect size in the original study - and meets the cost-requirements of the course.
+
+**Planned Sample**
+
+&nbsp; &nbsp; &nbsp; &nbsp; Participants in the original study were 127 MTurk workers with U.S. IP addresses, and who ranged in age from 18-61 (*M* = 31.48, *sd* = 10.04). Participants were 78% White, most had completed college (92.9%), and earn less than $50,000 (78.7%). This sample appears to be representative of the population of MTurk workers (e.g., Ipeirotis, 2015); thus, I will restrict participants to MTurk workers with U.S. IP addresses. I will stop collecting data once I have reached my planned sample size of 164.
+
+**Materials**
+<br>&nbsp; &nbsp; &nbsp; &nbsp; **Independent variables.** The two independent variables were time metric and chance for incremental action.
+<br>&nbsp; &nbsp; &nbsp; &nbsp; **<i>Time metric.</i>** Time metric was manipulated through framing retirement in either days (fine-grained) or years (gross-grained). Participants will be randomly assigned to read 1 of 2 vignettes about retirement that vary in their time metric:
+<br>1. Imagine you plan to retire. You realize you will be ready for retirement in only 10,950 days. [fine-grained condition]
+2. Imagine you plan to retire. You realize you will be ready for retirement in only 30 years. [gross-grained condition]
+<br>&nbsp; &nbsp; &nbsp; &nbsp; **<i>Chance for incremental action.</i>** Chance for incremental action was manipulated by asking participants how much they should save for retirement either daily/yearly (consistent with time metric condition; i.e., allows for incremental action) or overall (i.e., no chance for incremental action). 
+  
+&nbsp; &nbsp; &nbsp; &nbsp; **Dependent variables.** The two dependent variables were when to begin saving for retirement and how much to save.
+<br>&nbsp; &nbsp; &nbsp; &nbsp; **<i>When to begin saving for retirement.</i>** When to begin saving was assessed with a single item where participants were asked when they should begin to save. The question was framed in terms of the time metric condition to which participants were assigned. For example, someone in the fine-grained condition would see, "When should you begin saving for retirement? ___ days."
+<br>&nbsp; &nbsp; &nbsp; &nbsp; **<i>How much to save for retirement.</i>** Total savings was assessed with a single item where participants were asked how much they should save. The question framing was consistent with the time metric and chance for incremental action conditions to which participants were assigned. For example, someone in the fine-grained, incremental condition would see "How much should you save (in U.S. dollars) per day for your retirement? ___ "
+
+&nbsp; &nbsp; &nbsp; &nbsp; **Demographics and covariates.** Demographic items included in all analyses were age, income, and years of education. It is unclear exactly whether the original authors measured these continuously or categorically; however, the results were similar whether demographic covariates were controlled for or not, so I do not anticipate that my form of measurement will have an impact on the results.
+  
+**Procedure**
+
+&nbsp; &nbsp; &nbsp; &nbsp; Participants were randomly assigned to either the fine-grained or gross-grained time metric condition, and to either the chance for incremental action or no chance for incremental action (overall savings) condition. First, participants will read a consent form and provide their consent. Next, they will read the retirement scenario, they will respond to the question about when to begin saving for retirement, then the question about how much to save for their retirement (all consistent with their assigned condition). Finally, participants will respond to the three demographic questions.
+
+**Analysis Plan**
+
+&nbsp; &nbsp; &nbsp; &nbsp; The authors excluded five participants who gave responses that fell > 3 *sd* from the mean. They also excluded 1 additional individual. It is unclear why this was, but was likely due to missing data. Following this approach, I will exclude participants whose responses fall > 3 *sd* from the mean or who did not respond to the two items of interest.
+
+**Differences from the Original Study**
+
+&nbsp; &nbsp; &nbsp; &nbsp; Sample setting (MTurk) and overall demographics are expected to be similar to the original study (although the authors do not report full demographics, only % White, % making less than $50,000, etc.). I do not anticipate that any differences in demographic measurement will have an impact on the results because the original results held whether controlling for demographics or not.
+
+<center>**References**</center>
+<br>Ipeirotis, P. (2015). Demographics of Mechanical Turk: Now Live! (April 2015 edition). Retrieved January 31, 2015 from http://www.behind-the-enemy-lines.com/2015/04/demographics-of-mechanical-turk-now.html 
+<br>Lewis, N. A., & Oyserman, D. (2015). When does the future begin? Time metrics matter, connecting present and future selves. Psychological Science, 26(6), 816-825.
+  
+  
+
