@@ -47,7 +47,15 @@ output: html_document
 
 **Analysis Plan**
 
-&nbsp; &nbsp; &nbsp; &nbsp; The authors excluded five participants who gave responses that fell > 3 *sd* from the mean. They also excluded 1 additional individual. It is unclear why this was, but was likely due to missing data. Following this approach, I will exclude participants whose responses fall > 3 *sd* from the mean or who did not respond to the two items of interest.
+&nbsp; &nbsp; &nbsp; &nbsp; The authors excluded five participants who gave responses that fell > 3 *sd* from the mean on *when* to save. They also excluded 1 additional individual. It is unclear why this was, but was likely due to missing data. Following this approach, I will exclude participants whose responses fall > 3 *sd* from the mean of when to save, or how much to save or who did not respond to the two items of interest. I will also exclude data from participants who indicate that they would wait to begin saving longer than the prompt indicated (e.g., longer than 30 years in the gross-grained condition).
+
+I will begin by visualizing my data by using histograms and boxplots (to see ranges and detect outliers). I will also conduct a randomization check using a t-test to compare incremental action conditions on when to begin saving. There should be no differences between incremental action conditions on when to begin saving because this condition would not be initiated until the following question (that asks about saving amount).
+
+Next, I will use bar plots and line graphs to better visualize my data by condition. I will examine whether there are relationships between the two dependent variables and demographic covariates. In the original study, only income was found to be positively associated with amount to save. I will also examine correlations among all my independent and dependent variables of interest, and demographic covariates.
+
+To answer the main research questions, I will run 3 regression models to examine the interactive effects of time metric and incremental action on: a) when to begin saving, b) total savings amount, and c) savings amount log-transformed. I will then run those same regression models controlling for age, income, and education to test whether demographic covariates might be influencing the results.
+
+Finally, I will compare the group means I obtain from my sample on the 2 dependent variables to those obtained in the original study. I will also examine the relationship between when to save and savings amount in my sample.
 
 **Differences from the Original Study**
 
