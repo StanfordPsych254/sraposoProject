@@ -1,0 +1,7 @@
+.RData
+.Rhistory
+*.results
+ignore/*
+*.csv
+*.xls
+*.xlsx
