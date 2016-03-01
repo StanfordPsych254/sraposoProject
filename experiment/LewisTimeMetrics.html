@@ -9,14 +9,15 @@
 	<link rel="stylesheet" href="style.css"/>
 
 	<!-- jsPsych -->
-	<script src="jspsych-4.3/jspsych.js"></script>
-	<script src="jspsych-4.3/plugins/jspsych-survey-likert.js"></script>
-    <script src="jspsych-4.3/plugins/jspsych-survey-text.js"></script>
-	<script src="jspsych-4.3/plugins/jspsych-single-stim.js"></script>
-	<script src="jspsych-4.3/plugins/jspsych-text.js"></script>
-    <script src="jspsych-4.3/plugins/jspsych-html.js"></script>
+	<script src="jspsych-5.0.3/jspsych.js"></script>
+	<script src="jspsych-5.0.3/plugins/jspsych-survey-likert.js"></script>
+    <script src="jspsych-5.0.3/plugins/jspsych-survey-text.js"></script>
+	<script src="jspsych-5.0.3/plugins/jspsych-single-stim.js"></script>
+	<script src="jspsych-5.0.3/plugins/jspsych-text.js"></script>
+	<script src="jspsych-5.0.3/plugins/jspsych-survey-multi-choice.js"></script>
+    <script src="jspsych-5.0.3/plugins/jspsych-html.js"></script>
 	<!-- style -->
-	<link href="jspsych-4.3/css/jspsych.css" rel="stylesheet" type="text/css"></link>
+	<link href="jspsych-5.0.3/css/jspsych.css" rel="stylesheet" type="text/css"></link>
 
 </head>
 <body>
@@ -86,13 +87,13 @@ var condition = timeMetric + incrAction;
 
 var the_experiment = [];
 
+
 var instruct = {
     type:'text',  //which plugin file to use to run the trial
-    text: ['<br><center><p>Please read the following scenario carefully and respond to the questions that follow.</p><p>Press ENTER on your keyboard to continue</p></center>'], //literally the text to display for the question
+    text: '<br><center><p>Please read the following scenario and respond to the questions that follow.</p><p>Press any key on your keyboard to continue</p></center>', //literally the text to display for the question
     timing_post_trial:0,
-    cont_key: 13}; //key to press to move on
+    cont_key: []}; //key to press to move on
 the_experiment.push(instruct); //pushing the trial instruct
-
 
 
 //Vignette and DVs
@@ -100,11 +101,22 @@ the_experiment.push(instruct); //pushing the trial instruct
 
 var vignette = {
     type:'text',  //which plugin file to use to run the trial
-    text: ["<br><center><p>Imagine you plan to retire. You realize you will be ready for retirement in only " + [metric] + ".<br><br>Press ENTER on your keyboard after you have read the scenario.</p></center>"], //literally the text to display for the question
-    timing_post_trial:0,
-    cont_key: 13}; //key to press to move on
+    text: '<br><center><p>Imagine you plan to retire. You realize you will be ready for retirement in only ' + [metric] + '.<br><br>Press any key after you have read the scenario.</p></center>', //literally the text to display for the question
+    cont_key: []}; //key to press to move on
 the_experiment.push(vignette); //pushing the trial instruct
 
+/*
+var resp1 = "#jspsych-survey-text-response-0"
+function alphanumeric() { 
+  var numbers = /^[0-9]+$/;
+  if (numbers.test()) {
+    return true;
+  } else {
+    alert('Please input numbers characters only');
+    return false;
+  }
+}
+alphanumeric(resp1)*/
 
 var questionOpen = "<center><br>Please answer the following questions.</center>"
 
@@ -126,6 +138,7 @@ var surveySaving = {
 the_experiment.push(surveySaving);
 
 
+
 //Demographics
 
 
@@ -135,40 +148,49 @@ var surveyAge = {
 }
 the_experiment.push(surveyAge);
 
-var demoQuestions = ["<center>Please respond to the following questions about yourself.</center><br><br>What is your gender?", "<br>What is the highest level of education you have achieved?", "<br>What is the race with which you most identify?", "<br>What is your household income?"];
+//Defining demographic questions that will go together
+var demoQuestions = ["<br>What is your gender?", "<br>What is the highest level of education you have achieved?", "<br>What is the race with which you most identify?", "<br>What is your household income?"];
 
-var d1 = ["Male", "Female", "Other"];
-var d2 = ["high school diploma or less", "some college or technical school", "college degree", "some post-graduate", "post-graduate degree (e.g., Masters, Ph.D., J.D.)"];
-var d3 = ["White", "Black or African American", "American Indian or Alaska Native", "Asian", "Native Hawaiian or Pacific Islander"];
-var d4 = ["<$25,000", "$25-$49,999", "$50-$74,999", "$75-$99,999", "$100,000+"];
+// definiting four different response scales that can be used.
+var d1 = ["Male", "Female", "Other", "Decline to state"];
+var d2 = ["high school diploma or less", "some college or technical school", "college degree", "some post-graduate", "post-graduate degree (e.g., Masters, Ph.D., J.D.)", "Decline to state"];
+var d3 = ["White (non-Hispanic)", "White (Hispanic)", "Black or African American", "American Indian or Alaska Native", "Asian", "Native Hawaiian or Pacific Islander", "Decline to state"];
+var d4 = ["<$20,000", "$20-$29,999", "$30-$39,999", "$40-$49,999", "$50-$59,999", "$60-$69,999", "$70-$79,999", "$80-$89,999", "$90-$99,999", "$100,000+", "Decline to state"];
+
 
 var surveyDemos = {
-            type: 'survey-likert',
-            questions: [demoQuestions],
-            labels:[[d1, d2, d3, d4]], // need one scale for every question on a page
-            intervals:[[3, 5, 5, 5]], // note the the intervals and labels don't necessarily need to match.
-        };
+    type: 'survey-multi-choice',
+    preamble: '<center>Please respond to the following questions about yourself.</center>',
+    questions: demoQuestions,
+    options: [d1, d2, d3, d4],  // need one scale for every question on a page
+    required: [true, true, true, true],   // set whether questions are required
+    horizontal: false  // centres questions and makes options display horizontally
+};
 the_experiment.push(surveyDemos);
+
 
 
 var surveydebrief = {
     type: 'survey-text',
-    questions: [["<center>What was this experiment about? Anything else you want to tell us?</center>"]],
+    questions: [["What was this experiment about? <br><br>Anything else you want to tell us?"]],
+    rows: [10],
+  columns: [50]
 }
 the_experiment.push(surveydebrief);
 
 var submit = {
     type: 'text',
-    text: "<center>Thank your for your participation! <br><br> Press ENTER on your keyboard to submit</center>",
-    timing_post_trial:0,
-    cont_key: 13
+    text: "<center>Thank your for your participation! <br><br> Press any key on your keyboard to submit</center>",
+    cont_key: []
 };
 the_experiment.push(submit);
+
+
 
 jsPsych.init({
     display_element: $('#jspsych_target'),
     show_progress_bar: true,
-    experiment_structure: the_experiment,
+    timeline: the_experiment,
     on_finish: function() {
         var alldata = jsPsych.data.getData();
         alldata.push({condition: condition})
@@ -178,6 +200,7 @@ jsPsych.init({
         alldata.push({incrAction: incrAction}) 
         alldata.push({action: action})    
         turk.submit(alldata)
+        jsPsych.data.displayData('json')
 		}
 	});
 </script>
