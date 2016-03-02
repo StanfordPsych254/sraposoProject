@@ -15,7 +15,8 @@
 	<script src="jspsych-5.0.3/plugins/jspsych-single-stim.js"></script>
 	<script src="jspsych-5.0.3/plugins/jspsych-text.js"></script>
 	<script src="jspsych-5.0.3/plugins/jspsych-survey-multi-choice.js"></script>
-    <script src="jspsych-5.0.3/plugins/jspsych-html.js"></script>
+    <script src="jspsych-5.0.3/plugins/jspsych-html.js"></script>    
+
 	<!-- style -->
 	<link href="jspsych-5.0.3/css/jspsych.css" rel="stylesheet" type="text/css"></link>
 
@@ -35,7 +36,8 @@
 </body>
 
 <div class = "slide" id="task">
-	<div id="jspsych_target"> 
+	<div id="errmsg"></div>
+	<div id="jspsych_target">
 	</div>
 </div>
 
@@ -118,6 +120,17 @@ function alphanumeric() {
 }
 alphanumeric(resp1)*/
 
+var checkDecimal = function() {
+  $("textarea[name=#jspsych-survey-text-response-0]").keypress(function (e) {
+     //if the letter is not digit then display error and don't type anything
+     if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+        //display error message
+        $("#errmsg").html("Digits Only").show().fadeOut("slow");
+               return false;
+    }
+   });
+};
+   
 var questionOpen = "<center><br>Please answer the following questions.</center>"
 
 var delayQuestions = [questionOpen + "<br><br>When should you begin saving for retirement? In ___ " + [timeFrame] + ". (Numbers and decimals only)"];
@@ -200,7 +213,7 @@ jsPsych.init({
         alldata.push({incrAction: incrAction}) 
         alldata.push({action: action})    
         turk.submit(alldata)
-        jsPsych.data.displayData('json')
+        //jsPsych.data.displayData('json')
 		}
 	});
 </script>
