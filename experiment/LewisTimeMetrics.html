@@ -12,6 +12,7 @@
 	<script src="jspsych-5.0.3/jspsych.js"></script>
 	<script src="jspsych-5.0.3/plugins/jspsych-survey-likert.js"></script>
     <script src="jspsych-5.0.3/plugins/jspsych-survey-text.js"></script>
+    <script src="jspsych-5.0.3/plugins/jspsych-survey-text-numeric.js"></script>
 	<script src="jspsych-5.0.3/plugins/jspsych-single-stim.js"></script>
 	<script src="jspsych-5.0.3/plugins/jspsych-text.js"></script>
 	<script src="jspsych-5.0.3/plugins/jspsych-survey-multi-choice.js"></script>
@@ -36,7 +37,6 @@
 </body>
 
 <div class = "slide" id="task">
-	<div id="errmsg"></div>
 	<div id="jspsych_target">
 	</div>
 </div>
@@ -119,13 +119,17 @@ function alphanumeric() {
   }
 }
 alphanumeric(resp1)*/
+var currentTextbox; // initialize currentTextbox
+
 
 var checkDecimal = function() {
-  $("textarea[name=#jspsych-survey-text-response-0]").keypress(function (e) {
+  $("textarea[name=" + currentTextbox + "]").keypress(function (e) {
      //if the letter is not digit then display error and don't type anything
-     if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
-        //display error message
-        $("#errmsg").html("Digits Only").show().fadeOut("slow");
+     console.log(e.which);
+     if ((e.which != 8 && e.which != 0 && e.which != 110 && e.which != 190 && e.which != 46 && (e.which < 48 || e.which > 57)) || 
+     ($("textarea[name=" + currentTextbox + "]").val().indexOf('.') != -1 && (e.which == 110 || e.which == 190 || e.which == 46 ) )) { // add exception for period for decimal
+        //display error message and keep for 1 second
+        $("#errmsg").html("Please put a numerical value").show().delay(1500).fadeOut("slow");
                return false;
     }
    });
@@ -136,7 +140,7 @@ var questionOpen = "<center><br>Please answer the following questions.</center>"
 var delayQuestions = [questionOpen + "<br><br>When should you begin saving for retirement? In ___ " + [timeFrame] + ". (Numbers and decimals only)"];
 
 var savingDelay = {
-    type: 'survey-text',
+    type: 'survey-text-numeric',
     questions: [delayQuestions],
     };
 the_experiment.push(savingDelay);
@@ -145,7 +149,7 @@ the_experiment.push(savingDelay);
 var savingQuestions = [questionOpen + "<br>How much should you save (in U.S. dollars) " + [action] + " for your retirement? (Numbers and decimals only)"];
 
 var surveySaving = {
-    type: 'survey-text',
+    type: 'survey-text-numeric',
     questions: [savingQuestions],
     };
 the_experiment.push(surveySaving);
@@ -156,7 +160,7 @@ the_experiment.push(surveySaving);
 
 
 var surveyAge = {
-    type: 'survey-text',
+    type: 'survey-text-numeric',
     questions: [["<center>Please respond to the following questions about yourself.</center><br><br>What is your age? (Numbers only)"]],
 }
 the_experiment.push(surveyAge);
