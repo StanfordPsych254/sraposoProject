@@ -125,7 +125,7 @@ var currentTextbox; // initialize currentTextbox
 var checkDecimal = function() {
   $("textarea[name=" + currentTextbox + "]").keypress(function (e) {
      //if the letter is not digit then display error and don't type anything
-     console.log(e.which);
+     //console.log(e.which);
      if ((e.which != 8 && e.which != 0 && e.which != 110 && e.which != 190 && e.which != 46 && (e.which < 48 || e.which > 57)) || 
      ($("textarea[name=" + currentTextbox + "]").val().indexOf('.') != -1 && (e.which == 110 || e.which == 190 || e.which == 46 ) )) { // add exception for period for decimal
         //display error message and keep for 1 second
