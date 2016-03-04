@@ -69,20 +69,20 @@ if(timeMetric == "fine") {
 };
 
 if(metric == "10,950 days") {
-	var timeFrame = "days";
+	var timeFrame = "<b>days</b>";
 } else {
-	var timeFrame = "years";
+	var timeFrame = "<b>years</b>";
 };
 
 
 if(incrAction == "incremental") {
 	if(timeMetric == "fine") {
-		var action = "per day";
+		var action = "<b>per day</b>";
 	} else {
-		var action = "per year";}
+		var action = "<b>per year</b>";}
 }
 else {
-    var action = "overall";
+    var action = "<b>overall</b>";
 };
 
 var condition = timeMetric + incrAction;
