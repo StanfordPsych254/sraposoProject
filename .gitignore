@@ -2,6 +2,12 @@
 .Rhistory
 *.results
 ignore/*
+mturk/*
 *.csv
 *.xls
 *.xlsx
+*.json
+.DS_Store
+auth.json
+mturk-and-gmail.txt
+sarah-auth.json
