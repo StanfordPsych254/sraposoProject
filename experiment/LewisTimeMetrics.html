@@ -69,9 +69,9 @@ if(timeMetric == "fine") {
 };
 
 if(metric == "10,950 days") {
-	var timeFrame = "<b>days</b>";
+	var timeFrame = "<b>day(s)</b>";
 } else {
-	var timeFrame = "<b>years</b>";
+	var timeFrame = "<b>year(s)</b>";
 };
 
 
@@ -92,7 +92,7 @@ var the_experiment = [];
 
 var instruct = {
     type:'text',  //which plugin file to use to run the trial
-    text: '<br><center><p>Please read the following scenario and respond to the questions that follow.</p><p>Press any key on your keyboard to continue</p></center>', //literally the text to display for the question
+    text: '<br><center><p>Please read the following scenario and respond to the questions that follow.</p><p>Press the ENTER on your keyboard to continue</p></center>', //literally the text to display for the question
     timing_post_trial:0,
     cont_key: []}; //key to press to move on
 the_experiment.push(instruct); //pushing the trial instruct
@@ -103,7 +103,7 @@ the_experiment.push(instruct); //pushing the trial instruct
 
 var vignette = {
     type:'text',  //which plugin file to use to run the trial
-    text: '<br><center><p>Imagine you plan to retire. You realize you will be ready for retirement in only ' + [metric] + '.<br><br>Press any key after you have read the scenario.</p></center>', //literally the text to display for the question
+    text: '<br><center><p>Imagine you plan to retire. You realize you will be ready for retirement in only ' + [metric] + '.<br><br>Press the ENTER key after you have read the scenario.</p></center>', //literally the text to display for the question
     cont_key: []}; //key to press to move on
 the_experiment.push(vignette); //pushing the trial instruct
 
@@ -115,8 +115,8 @@ var checkDecimal = function() {
   $("textarea[name=" + currentTextbox + "]").keypress(function (e) {
      //if the letter is not digit then display error and don't type anything
      //console.log(e.which);
-     if ((e.which != 8 && e.which != 0 && e.which != 110 && e.which != 190 && e.which != 46 && (e.which < 48 || e.which > 57)) || 
-     ($("textarea[name=" + currentTextbox + "]").val().indexOf('.') != -1 && (e.which == 110 || e.which == 190 || e.which == 46 ) )) { // add exception for period for decimal
+     if ((e.which != 8 && e.which != 0 && e.which != 110 && e.which != 190 && e.which != 188 && e.which != 46 && (e.which < 48 || e.which > 57)) || 
+     ($("textarea[name=" + currentTextbox + "]").val().indexOf('.') != -1 && (e.which == 110 || e.which == 190 || e.which == 46 || e.which == 188 ) )) { // add exception for period for decimal
         //display error message and keep for 1 second
         $("#errmsg").html("Please put a numerical value").show().delay(1500).fadeOut("slow");
                return false;
@@ -126,7 +126,7 @@ var checkDecimal = function() {
    
 var questionOpen = "<center><br>Please answer the following questions.</center>"
 
-var delayQuestions = [questionOpen + "<br><br>When should you begin saving for retirement? In ___ " + [timeFrame] + ". (Numbers and decimals only)"];
+var delayQuestions = [questionOpen + "<br><br>When should you begin saving for retirement? In ___ " + [timeFrame] + "."];
 
 var savingDelay = {
     type: 'survey-text-numeric',
@@ -135,7 +135,7 @@ var savingDelay = {
 the_experiment.push(savingDelay);
 
 
-var savingQuestions = [questionOpen + "<br>How much should you save (in U.S. dollars) " + [action] + " for your retirement? (Numbers and decimals only)"];
+var savingQuestions = [questionOpen + "<br>How much should you save (in U.S. dollars) " + [action] + " for your retirement? $___ " + [action]];
 
 var surveySaving = {
     type: 'survey-text-numeric',
@@ -150,7 +150,7 @@ the_experiment.push(surveySaving);
 
 var surveyAge = {
     type: 'survey-text-numeric',
-    questions: [["<center>Please respond to the following questions about yourself.</center><br><br>What is your age? (Numbers only)"]],
+    questions: [["<center>Please respond to the following questions about yourself.</center><br><br>What is your age?"]],
 }
 the_experiment.push(surveyAge);
 
@@ -178,15 +178,15 @@ the_experiment.push(surveyDemos);
 
 var surveydebrief = {
     type: 'survey-text',
-    questions: [["What was this experiment about? <br><br>Anything else you want to tell us?"]],
-    rows: [10],
-  columns: [50]
+    questions: ["What was this experiment about?","Anything else you want to tell us?"],
+    rows: [10,10],
+  columns: [50,50]
 }
 the_experiment.push(surveydebrief);
 
 var submit = {
     type: 'text',
-    text: "<center>Thank your for your participation! <br><br> In this study we were interested in whether thinking about retirement in terms of days (vs. years) encourages people to begin saving earlier for retirement and save more money. We hope that the results of this study enhance our understanding of how people can better prepare for retirement. <br><br>Press any key on your keyboard to submit</center>",
+    text: "<center>Thank your for your participation! <br><br> In this study we were interested in whether thinking about retirement in terms of days (vs. years) encourages people to begin saving earlier for retirement and save more money. We hope that the results of this study enhance our understanding of how people can better prepare for retirement. <br><br>Press the ENTER key on your keyboard to submit</center>",
     cont_key: []
 };
 the_experiment.push(submit);
