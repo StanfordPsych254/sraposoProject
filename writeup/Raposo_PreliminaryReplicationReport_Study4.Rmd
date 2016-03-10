@@ -10,11 +10,13 @@ output: html_document
 <center>Neil A. Lewis, Jr. & Daphna Oyserman
 <br><a href="mailto:daphna.oyserman@gmail.com">daphna.oyserman@gmail.com</a></center>
 
+<br><br>Link to testable replication paradigm: https://web.stanford.edu/~sraposo/experiment/LewisTimeMetrics.html
+
 <br><br><center>**Introduction**</center>
 
 <br> &nbsp; &nbsp; &nbsp; &nbsp; People do not save enough for retirement. This may be in part because retirement feels very far away, especially to young people. Study 4 in this paper aimed to elucidate whether having people think about retirement in terms of fine-grained (e.g., days) vs. gross-grained (e.g., years) time metrics impacts when they think they should begin to save for retirement. A secondary goal was to examine whether people think they should save a different amount for retirement when asked how much they should save incrementally, as a function of the time metric they say (i.e., days or years; "incremental action") or how much they should save overall.
 
-&nbsp; &nbsp; &nbsp; &nbsp; In the original study, the authors found that people who read that retirement would begin in 10,950 days said they would wait *less time* to begin saving for retirement compared to those who read that retirement would begin in 30 years (equivalent to 10,950 days), *F*(1,115) = 7.497, *p* = .007, *d* = 0.51. These analyses controlled for participants' age, education, and income, but also held when not controlling for these varaibles There was no effect of incremental action condition, nor was there a significant interaction.  
+&nbsp; &nbsp; &nbsp; &nbsp; In the original study, the authors found that people who read that retirement would begin in 10,950 days said they would wait *less time* to begin saving for retirement compared to those who read that retirement would begin in 30 years (equivalent to 10,950 days), *F*(1,115) = 7.497, *p* = .007, *d* = 0.51. These analyses controlled for participants' age, education, and income, but also held when not controlling for these variables There was no effect of incremental action condition, nor was there a significant interaction.  
 
 &nbsp; &nbsp; &nbsp; &nbsp; Furthermore, neither time metric condition, nor incremental action condition (i.e., amount they should save daily/yearly vs. overall), had an effect on the amount that participants said they should save for retirement. There was also no significant interaction. These results suggest that having people think about their retirement in terms of days may encourage them to start saving sooner than those who think about their retirement in the traditional time metric of years.
 
@@ -22,11 +24,11 @@ output: html_document
 
 **Power Analysis**
 
-&nbsp; &nbsp; &nbsp; &nbsp; The reported effect size for the original statistically significant main effect with 122 participants was d = 0.51. Post-hoc power calculation indicated that power for the original study was 0.79. Assuming an effect size of d = 0.51, I would require N = 123 to achieve 80% power, N = 164 to achieve 90% power, and N = 202 to achieve 95% power. I will aim to achieve 80% power, so will require a sample size of N = 123. This sample size gives me confidence that I should find an effect if it is present and meets the cost requirements of the course.
+&nbsp; &nbsp; &nbsp; &nbsp; The reported effect size for the original statistically significant main effect with 122 participants was *d* = 0.51. Post-hoc power calculation indicated that power for the original study was 0.79. Assuming an effect size of *d* = 0.51, I would require *N* = 123 to achieve 80% power, *N* = 164 to achieve 90% power, and *N* = 202 to achieve 95% power. Similar to the original study, I will aim to achieve 80% power and so will require a sample size of *N* = 123. 
 
 **Planned Sample**
 
-&nbsp; &nbsp; &nbsp; &nbsp; Participants in the original study were 127 MTurk workers with U.S. IP addresses, and who ranged in age from 18-61 (*M* = 31.48, *sd* = 10.04). Participants were 78% White, most had completed college (92.9%), and earn less than $50,000 (78.7%). This sample appears to be representative of the population of MTurk workers (e.g., Ipeirotis, 2015); thus, I will restrict participants to MTurk workers with U.S. IP addresses. I will stop collecting data once I have reached my planned sample size of 123.
+&nbsp; &nbsp; &nbsp; &nbsp; Participants in the original study were 127 MTurk workers with U.S. IP addresses, and who ranged in age from 18-61 (*M* = 31.48, *sd* = 10.04). Participants were mostly White (78.0%), most had completed college (92.9%), and earn less than $50,000 (78.7%). This sample appears to be representative of the population of MTurk workers (e.g., Ipeirotis, 2015); thus, I will restrict participants to MTurk workers with U.S. IP addresses. I will stop collecting data once I have reached my planned sample size of 123 + 5% = 130.
 
 **Materials**
 <br>&nbsp; &nbsp; &nbsp; &nbsp; **Independent variables.** The two independent variables were time metric and chance for incremental action.
@@ -55,7 +57,7 @@ output: html_document
 
 **Differences from the Original Study**
 
-&nbsp; &nbsp; &nbsp; &nbsp; Sample setting (MTurk) and overall demographics are expected to be similar to the original study (although the authors do not report full demographics, only % White, % making less than $50,000, etc.). I do not anticipate that any differences in demographic measurement will have an impact on the results because the original results held whether controlling for demographics or not.
+&nbsp; &nbsp; &nbsp; &nbsp; Sample setting (MTurk) and overall demographics are expected to be similar to the original study (although the authors do not report full demographics, only % White, % making less than $50,000, etc.). I do not anticipate that any differences in demographic measurement will have an impact on the results because the original results held whether controlling for demographics or not. Another minor difference is that I will slightly modify how I ask for responses for the "when to save" question. To make the question clearer to participants, rather than ask for responses as "per unit" in the incremental action condition, I will ask for responses "per day" or "per year" consistent with their condition.
 
 -----
 
@@ -66,6 +68,7 @@ output: html_document
 ```{r warning = FALSE, message = FALSE, echo = FALSE}
 rm(list=ls())
 library(rjson)
+library(plyr)
 library(dplyr)
 library(tidyr)
 library(stringr)
@@ -75,7 +78,7 @@ library(ggplot2)
 #Loading helpers
 sem <- function(x) {sd(x, na.rm=TRUE) / sqrt(length(x))}
 ci95 <- function(x) {sem(x) * 1.96}
-theme_set(theme_bw())
+theme_set(theme_linedraw())
 
 ## NA functions
 na.mean <- function(x) {mean(x,na.rm=T)}
@@ -89,12 +92,12 @@ to.n <- function(x) {
 }
 
 path <- "~/Desktop/sraposoProject/ignore/mturk/"
-files <- dir(paste0(path,"sandbox-results/"), 
+files <- dir(paste0(path,"production-results/"), 
              pattern = "*.json")
 d.raw <- data.frame()
 
 for (f in files) {
-  jf <- paste0(path, "sandbox-results/", f)
+  jf <- paste0(path, "production-results/", f)
   jd <- fromJSON(paste(readLines(jf), collapse=""))
   id <- data.frame(workerid = jd$WorkerId, 
                    ans = jd$answers)
@@ -133,36 +136,46 @@ d0$age <- gsub("Q0", "", d0$age) #removing Q0 from responses
 d0$age = gsub("([.])|[[:punct:]]", "\\1", d0$age) #removing all punctuation except "."
 d0$demos <- gsub("Q0", "", d0$demos) #removing Q0 from responses
 d0$demos = gsub("([.$,-])|[[:punct:]]", "\\1", d0$demos) #removing all punctuation except "."
-d0[2, 7] = .5 #replacing these 2 values from pilot only
-d0[7, 9] = 40 #replacing these 2 values from pilot only
+#d0[2, 7] = .5 #replacing these 2 values from pilot A only
+#d0[7, 9] = 40 #replacing these 2 values from pilot A only
 
 
-d0$demos <- gsub(",Q1", "_", d0$demos)
+d0$demos <- gsub(",Q1", "_", d0$demos) #adding separators in between demographic responses
 d0$demos <- gsub(",Q2", "_", d0$demos)
 d0$demos <- gsub(",Q3", "_", d0$demos)
-d0$comments <- gsub("Q0", "", d0$comments) #adding separators in between demographic responses
+d0$comments <- gsub("Q0", "", d0$comments) 
+d0$comments <- gsub("Q1", "_", d0$comments) 
 
 d0 = as.data.frame(cSplit(d0, "demos", sep = "_", direction = "wide"))
+d0 = as.data.frame(cSplit(d0, "comments", sep = "_", direction = "wide"))
 
 #Making data tidy
 d.demos <- d0 %>% 
   rename(gender = demos_1,
          edu = demos_2,
          race = demos_3,
-         income = demos_4) %>%
+         income = demos_4,
+         purpose = comments_1,
+         comments = comments_2) %>%
   mutate(gendercat = as.factor(gender),
          educat = as.factor(edu),
          racecat = as.factor(race),
          incomecat = as.factor(income))
 
 # Cleaning up factor labels 
+d.demos$gendercat = factor(d.demos$gender, labels = c("Female", "Male", "Other", "Decline to state"), levels = c("Female", "Male", "Other", "Decline to state"))
 
-#str(d.demos$educat)
-#d.demos$gendercat = factor(d.demos$gender, labels = c("Male", "Female", "Other", "Decline to state"))
-#d.demos$educat = factor(d.demos$educat, labels = c("high school diploma or less", "some college or technical school", "college degree", "some post-graduate", "post-graduate degree (e.g., Masters, Ph.D., J.D.)", "Decline to state"))
-#d.demos$racecat = factor(d.demos$race, labels = c("White non-Hispanic", "White Hispanic", "Black or African American", "American Indian or Alaska Native", "Asian", "Native Hawaiian or Pacific Islander", "Decline to state"))
-#d.demos$incomecat = factor(d.demos$income, labels = c("<$20,000", "$20-$29,999", "$30-$39,999", "$40-$49,999", "$50-$59,999", "$60-$69,999", "$70-$79,999", "$80-$89,999", "$90-$99,999", "$100,000+", "Decline to state"))
+d.demos$educat = factor(d.demos$educat, labels = c("high school diploma or less", "some college or technical school", "college degree", "some post-graduate", "post-graduate degree e.g., Masters, Ph.D., J.D.", "Decline to state"), levels = c("high school diploma or less", "some college or technical school", "college degree", "some post-graduate", "post-graduate degree e.g., Masters, Ph.D., J.D.", "Decline to state"))
 
+d.demos$racecat = factor(d.demos$race, labels = c("White non-Hispanic", "White Hispanic", "Black or African American", "American Indian or Alaska Native", "Asian", "Native Hawaiian or Pacific Islander", "Decline to state"), levels = c("White non-Hispanic", "White Hispanic", "Black or African American", "American Indian or Alaska Native", "Asian", "Native Hawaiian or Pacific Islander", "Decline to state"))
+
+d.demos$incomecat = factor(d.demos$income, labels = c("<$20,000", "$20-$29,999", "$30-$39,999", "$40-$49,999", "$50-$59,999", "$60-$69,999", "$70-$79,999", "$80-$89,999", "$90-$99,999", "$100,000", "Decline to state"), levels = c("<$20,000", "$20-$29,999", "$30-$39,999", "$40-$49,999", "$50-$59,999", "$60-$69,999", "$70-$79,999", "$80-$89,999", "$90-$99,999", "$100,000", "Decline to state"))
+
+d.demos <- d.demos %>% 
+  mutate(gender = as.numeric(gendercat),
+         edu = as.numeric(educat),
+         race = as.numeric(racecat),
+         income = as.numeric(incomecat))
 
 # Writing tidy file
 setwd("~/Desktop/sraposoProject/ignore/data")
@@ -176,71 +189,56 @@ Participants were `r length(unique(d.raw$workerid))` MTurk workers.
 
 #Reading in tidy file
 setwd("~/Desktop/sraposoProject/ignore/data")
-d0 = read.csv("LewisReplication_PilotData_Tidy.csv")
+d0 = read.csv("LewisReplication_PilotData_Tidy.csv", na.strings = c("NA"))
 #length(unique(d0$workerid))
 
 # Editing factor structure from tidy file
 
 d0$conditionnum = as.numeric(d0$condition)
+d0$educat = factor(d0$educat, levels = c("high school diploma or less", "some college or technical school", "college degree", "some post-graduate", "post-graduate degree e.g., Masters, Ph.D., J.D.", "Decline to state"))
+d0$incomecat = factor(d0$incomecat, levels = c("<$20,000", "$20-$29,999", "$30-$39,999", "$40-$49,999", "$50-$59,999", "$60-$69,999", "$70-$79,999", "$80-$89,999", "$90-$99,999", "$100,000", "Decline to state"))
+d0$gendercat = factor(d0$gendercat, levels = c("Female", "Male", "Other", "Decline to state"))
+d0$racecat = factor(d0$racecat, levels = c("White non-Hispanic", "White Hispanic", "Black or African American", "American Indian or Alaska Native", "Asian", "Native Hawaiian or Pacific Islander", "Decline to state"))
 
-#table(d0$edu)
-#d0$educat = factor(d0$edu, labels = c("high school diploma or less", "some college or technical school", "college degree", "some post-graduate", "post-graduate degree (e.g., Masters, Ph.D., J.D.)", "Decline to state"))
-#table(d0$educat)
-
-#table(d0$income)
-#d0$incomecat = factor(d0$income, labels = c("<$20,000", "$20-$29,999", "$30-$39,999", "$40-$49,999", "$50-$59,999", "$60-$69,999", "$70-$79,999", "$80-$89,999", "$90-$99,999", "$100,000+", "Decline to state"))
-#table(d0$incomecat)
-
-#d0$gendercat = factor(d0$gender, labels = c("male", "female", "other", "decline to state"))
-#table(d0$gendercat)
-
-#d0$racecat = factor(d0$race, labels = c("White", "Hispanic", "Black", "AmerInd/AlaskaNative", "Asian", "PacifIslander", "decline to state"))
-#table(d0$racecat)
 
 #Converting delaytime to years and savings to total savings. Creating a log(savings) variable to compare to original study
-#str(d0$savings)
-#range(d0$savings)
-#str(d0$delaytime)
-#range(d0$delaytime)
 
+# Raw delay time (days vs. years)
 delaytimeraw = d0 %>% 
   group_by(timeMetric) %>%
   summarise(mean=mean(delaytime, na.rm = T), sd=sd(delaytime, na.rm = T), n = sum(!is.na(delaytime)), sem = sem(delaytime))
-#delaytimeraw
 
 #Computing delay time in years
-
 d0$delaydiv <- ifelse(d0$timeMetric == "fine", 365, 1) #Creating a denominator, depending on condition
 d0$delaytimeyrs = d0$delaytime / d0$delaydiv #Calculating time to wait in years
 #range(d0$delaytimeyrs, na.rm = T) #Checking range of new variable
 delaytimeyrs = d0 %>% 
   group_by(timeMetric) %>%
   summarise(mean=mean(delaytimeyrs, na.rm = T), sd=sd(delaytimeyrs, na.rm = T), n = sum(!is.na(delaytimeyrs)), sem = sem(delaytimeyrs))
-#delaytimeyrs
 
+# Raw savings (per day vs per year vs overall)
 savingraw = d0 %>% 
   group_by(incrAction) %>%
   summarise(mean=mean(savings, na.rm = T), sd=sd(savings, na.rm = T), n = sum(!is.na(savings)), sem = sem(savings))
-#savingraw
 
 #Computing total savings
 
-d0$savingdiv <- ifelse((d0$timeMetric == "fine") & (d0$incrAction) == "incremental", 10950, 
+d0$savingmult <- ifelse((d0$timeMetric == "fine") & (d0$incrAction) == "incremental", 10950, 
                        ifelse((d0$timeMetric == "gross") & (d0$incrAction == "incremental"), 30, 1)) #Creating multiplier, depending on condition (only necessary for incremental action conditions)
-d0$savingtot = d0$savings * d0$savingdiv #Calculating overall retirement savings
+d0$savingtot = d0$savings * d0$savingmult #Calculating overall retirement savings
+
 #range(d0$savingtot, na.rm = T) #Checking range
-#str(d)
+#str(d0$savingtot)
+
 savingtot = d0 %>% 
   group_by(incrAction) %>%
   summarise(mean=mean(savingtot, na.rm = T), sd=sd(savingtot, na.rm = T), n = sum(!is.na(savingtot)), sem = sem(savingtot))
-#savingtot
 
 d0$logsavingtot = log(d0$savingtot) #Creating log(savings) using natural log
 #range(d0$logsavingtot) #checking range
 
-#str(d0$age)
-#d0$age = as.numeric(d0$age)
-#range(d0$age)
+d0$age = as.numeric(d0$age)
+
 ```
 
 
@@ -256,6 +254,10 @@ qplot(delaytimeyrs, data = d0) +
   facet_wrap(~timeMetric) +
   xlab("Years to Wait")
 
+#Histogram of log(total savings)
+qplot(logsavingtot, data = d0) +
+  xlab("Total Retirement Savings - Log")
+
 #Histogram of log(total savings) by condition
 qplot(logsavingtot, data = d0) +
   facet_wrap(~condition) +
@@ -263,12 +265,12 @@ qplot(logsavingtot, data = d0) +
 
 #Histogram of total retirement savings
 qplot(savingtot, data = d0) +
-  xlab("Total Retirement Savings")
+  xlab("Total Retirement Savings ($)")
 
 #Histogram of total retirement savings by condition
 qplot(savingtot, data = d0) +
   facet_wrap(~condition) +
-  xlab("Total Retirement Savings")
+  xlab("Total Retirement Savings ($)")
 
 
 ```
@@ -307,38 +309,42 @@ ggplot(d0, aes(factor(condition), logsavingtot)) +
 ```
 
 
-&nbsp; &nbsp; &nbsp; &nbsp; First it is important to exclude participants based on my predetermined exclusion criteria. I will exclude participants who did not respond to the dependent variables, who reported they would wait longer than 10,950 days to begin saving in the fine-grained condition, or longer than 30 years in the gross-grained condition, and those who gave responses that fell more than three standard deviations above the mean on the dependent variables.
+&nbsp; &nbsp; &nbsp; &nbsp; Before running any analyses I will exclude participants based on my predetermined exclusion criteria. I will exclude participants who did not respond to the dependent variables, who reported they would wait longer than 10,950 days to begin saving in the fine-grained condition, or longer than 30 years in the gross-grained condition, and those who gave responses that fell more than three standard deviations above the mean on the dependent variables.
+
 ```{r warning = FALSE, echo = FALSE}
 
 # Sanity check
 #range(d0$delaytime[d0$timeMetric == "fine"], na.rm = T) #can't wait more than 10950 days
 #range(d0$delaytime[d0$timeMetric == "gross"], na.rm = T) #can't wait more than 30yrs
 
-d0$delayexclude <- ifelse(d0$delaytimeyrs > (mean(d0$delaytimeyrs, na.rm = T) + 3*sd(d0$delaytimeyrs, na.rm = T)), "exclude", "include") 
-tdelayexcl = table(d0$delayexclude)
+d1 = d0[!is.na(d0$delaytimeyrs), ]
 
-d0$delayrawexclude1 <- ifelse((d0$timeMetric == "fine" & d0$delaytime > 10950), "exclude", "include") 
-tdelayexclraw1 = table(d0$delayrawexclude1)
+d1$delayexclude <- ifelse(d1$delaytimeyrs > (mean(d1$delaytimeyrs, na.rm = T) + 3*sd(d1$delaytimeyrs, na.rm = T)), "exclude",
+                          ifelse(d1$delaytimeyrs == "NA", "exclude", "include")) 
+tdelayexcl = table(d1$delayexclude)
 
-d0$delayrawexclude2 <- ifelse((d0$timeMetric == "gross" & d0$delaytime > 30), "exclude", "include") 
-tdelayexclraw2 = table(d0$delayrawexclude2)
+d1$delayrawexclude1 <- ifelse((d1$timeMetric == "fine" & d1$delaytime > 10950), "exclude", "include") 
+tdelayexclraw1 = table(d1$delayrawexclude1)
 
-d0$exclude <- ifelse((d0$delayexclude == "exclude" | d0$delayrawexclude1 == "exclude" | d0$delayrawexclude2 == "exclude"), "exclude", "include") 
-#d0$exclude = factor(d0$exclude, labels = c("exclude", "include"))
-tableexcl = table(d0$exclude)
+d1$delayrawexclude2 <- ifelse((d1$timeMetric == "gross" & d1$delaytime > 30), "exclude", "include") 
+tdelayexclraw2 = table(d1$delayrawexclude2)
 
-d = d0[d0$exclude == "include",] #only keeping those cases that I decided to include
+d1$exclude <- ifelse((d1$delayexclude == "exclude" | d1$delayrawexclude1 == "exclude" | d1$delayrawexclude2 == "exclude"), "exclude", "include") 
+tableexcl = table(d1$exclude)
 
+d = d1[d1$exclude == "include",] #only keeping those cases should not be excluded based on criteria above
+ndiff = length(unique(d0$workerid))-length(unique(d$workerid))
+nincl = length(unique(d$workerid))
 ```
-In total we excluded data from `r tableexcl[1]` participants. We excluded `r tdelayexclraw1[1]` participants who would wait longer than 10,950 days in the fine-grained condition and `r tdelayexclraw2[1]` participants who would wait longer than 30 years to begin saving in the gross-grained condition. `r tdelayexcl[1]` participants gave responses > 3SD from the mean on when they would begin to save. 
+In total we excluded data from `r ndiff` participants based on the criteria above, for a total of `r nincl` participants.
 
 **Main analyses**
 
-&nbsp; &nbsp; &nbsp; &nbsp; To begin the analyses I will plot how long people say they will wait to begin saving by time metric condition, and how much they think they should save for retirement by time metric and incremental action condition. 
+&nbsp; &nbsp; &nbsp; &nbsp; To visualize the critical analysis I will plot how long participants say they will wait to begin saving by time metric condition. To visualize the secondary analysis I will plot how much participants think they should save for retirement by time metric and incremental action condition. 
 
-&nbsp; &nbsp; &nbsp; &nbsp; Consistent with the original results, I expect that people in the fine-grained condition will want to wait less time to begin saving for retirement compared to those in the gross-grained condition.
+&nbsp; &nbsp; &nbsp; &nbsp; Consistent with the original results, I expect that people in the fine-grained condition will want to wait less time to begin saving for retirement compared to those in the gross-grained condition. All error bars reflect +/-1 standard error.
 
-```{r warning = FALSE, message = FALSE, echo = FALSE, fig.width=4.5, fig.height=3.5}
+```{r warning = FALSE, message = FALSE, echo = FALSE, fig.width=4, fig.height=3.5}
 delaytimemean = d %>% 
   group_by(timeMetric) %>%
   summarise(mean=mean(delaytimeyrs, na.rm = T), sd=sd(delaytimeyrs, na.rm = T), n = sum(!is.na(delaytimeyrs)), sem = sem(delaytimeyrs))
@@ -350,19 +356,40 @@ ggplot(delaytimemean[!is.na(delaytimemean$timeMetric), ], aes(x=timeMetric, y = 
            size=.3) +
   geom_errorbar(aes(ymin=mean-sem, ymax=mean+sem),
                 size=.4,
-                width=.2,                    # Width of the error bars
+                width=.1,                    # Width of the error bars
                 position=position_dodge(.9)) +
-#  ylim(c(0,2.5)) + #to match original study
+  coord_cartesian(ylim=c(0,2.5)) + #to match original study
   xlab("Time metric condition") +
   ylab("Delay to start saving (years)") +
-  ggtitle("Years to Delay Retirement Saving by Condition") +
-  theme_bw(base_size = 11)
+  ggtitle("Years to Delay Retirement Saving by \n Condition - Replication") +
+  theme_linedraw(base_size = 11)
+
+# plotting means and standard errors for original results
+origdelay <- matrix(c(.45, 1.70, .40, .35, "fine", "gross"), ncol=3)
+colnames(origdelay) <- c('mean', 'se', 'condition')
+delaytable <- data.frame(origdelay)
+delaytable$mean = as.numeric(as.character(delaytable$mean))
+delaytable$se = as.numeric(as.character(delaytable$se))
+
+ggplot(delaytable, aes(x = condition, y = mean)) + 
+  geom_bar(position=position_dodge(), stat="identity",
+           colour="black", # Use black outlines,
+           size=.3) +
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se),
+              size=.4,
+              width=.1,                    # Width of the error bars
+              position=position_dodge(.9)) +
+  coord_cartesian(ylim=c(0,2.5)) + 
+  xlab("Time metric condition") +
+  ylab("Delay to start saving (years)") +
+  ggtitle("Years to Delay Retirement Saving by \n Condition - Original") +
+  theme_linedraw(base_size = 11)
 ```
 
 
 &nbsp; &nbsp; &nbsp; &nbsp; Now, consistent with the original paper, I will plot how much people report they should save for retirement (natural log transformed) by time metric and incremental action conditions. 
 
-```{r warning = FALSE, message = FALSE, echo = FALSE, fig.width=5.5, fig.height=3.5}
+```{r warning = FALSE, message = FALSE, echo = FALSE, fig.width=4.5, fig.height=3.5}
 logsavingtotmean = d %>% 
   group_by(timeMetric, incrAction) %>%
   summarise(mean=mean(logsavingtot, na.rm = T), sd=sd(logsavingtot, na.rm = T), n = sum(!is.na(logsavingtot)), sem = sem(logsavingtot))
@@ -380,48 +407,77 @@ ggplot(logsavingtotmean[!is.na(logsavingtotmean$timeMetric), ], aes(x=timeMetric
 #  ylim(c(0,13)) + #to match original study
   xlab("Time metric condition") + 
   ylab("Log total retirement savings ($)") +
-  ggtitle("Retirement Savings (log) by Condition") +
-  theme_bw(base_size = 11)
+  ggtitle("Retirement Savings (log) by \n Condition - Replication") +
+  theme_linedraw(base_size = 11)
+
+
+origsaving <- matrix(c(12.32, 12.28, 12.39, 13.02, 0.25, 0.30, 0.20, 0.25, "fine", "fine", "gross", "gross", "incremental", "overall", "incremental", "overall"), ncol=4)
+colnames(origsaving) <- c('mean', 'se', 'timemetric', 'action')
+savingtable <- data.frame(origsaving)
+savingtable$timemetric = factor(savingtable$timemetric, labels = c("fine", "gross"),levels = c("fine", "gross"))
+savingtable$action = factor(savingtable$action, labels = c("incremental", "overall"), levels = c("incremental", "overall"))
+savingtable$mean = as.numeric(as.character(savingtable$mean))
+savingtable$se = as.numeric(as.character(savingtable$se))
+
+ggplot(savingtable, aes(x = timemetric, y = mean, fill = action)) + 
+  geom_bar(position=position_dodge(), stat="identity",
+           colour="black", # Use black outlines,
+           size=.3) +
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se),
+            size=.4,
+            width=.2,                    # Width of the error bars
+            position=position_dodge(.9)) +
+  coord_cartesian(ylim=c(11,13.5)) + 
+  xlab("Time metric condition") +
+  ylab("Log total retirement savings ($)") +
+  ggtitle("Retirement Savings (log) by \n Condition - Original") +
+  theme_linedraw(base_size = 11)
 ```
 
 
-&nbsp; &nbsp; &nbsp; &nbsp; Consistent with the graphs above, there were two main analyses in the original paper. The first was whether there were differences between time metric condition on WHEN to begin saving for retirement. The second was whether there were differences between time metric conditions or incremental action conditions on how much to save. In both cases, the authors ran a regression model with no demographic controls, and a model with demographic controls (age, education, income). Only income significantly predicted amount to save, but controlling for demographics did not change the interpretation of either outcome.
 
-##### Effect of time metric and incremental action on when to save
 
-&nbsp; &nbsp; &nbsp; &nbsp; Consistent with the original paper, I expect a main effect of time metric such that people in the fine-grained condition would begin to save sooner than those in the gross-grained condition.
+##### Critical analysis: Effect of time metric and incremental action on when to save
 
-```{r warning = FALSE, message = FALSE, echo = FALSE, eval = FALSE}
+&nbsp; &nbsp; &nbsp; &nbsp; Consistent with the graphs above, there were two main analyses in the original paper. The primary analysis of interest was whether there were differences between time metric condition on WHEN to begin saving for retirement. The secondary analysis of interest was whether there were differences between time metric conditions or incremental action conditions on how much to save. In both cases, the authors ran a regression model with no demographic controls, and a model with demographic controls (age, education, income). Only income significantly predicted amount to save, but controlling for demographics did not change the interpretation of either outcome.
+
+&nbsp; &nbsp; &nbsp; &nbsp; Consistent with the original paper, I expect a main effect of time metric such that people in the fine-grained condition would begin to save sooner than those in the gross-grained condition. I expect a similar effect regardless of whether I control for demographics.
+
+```{r warning = FALSE, message = FALSE, echo = FALSE}
+#controlling for demographics 
+rs.lmdelaytot.cov = lm(delaytimeyrs ~ age + income + edu + timeMetric * incrAction, d)
+anova(rs.lmdelaytot.cov)
+
 #no demographic controls
-rs.lmdelaytot = lm(delaytimeyrs ~ timeMetric * incrAction, d) 
+rs.lmdelaytot = lm(delaytimeyrs ~ timeMetric * incrAction, d)
 anova(rs.lmdelaytot)
 
-#controlling for demographics 
-rs.lmdelaytot.cov = lm(delaytimeyrs ~ timeMetric * incrAction + age + income + edu, d)
-
 ```
 
 
 
-##### Effect of time metric and incremental action on how much to save (log transformed)
+##### Secondary analysis: Effect of time metric and incremental action on how much to save (log transformed)
 
-&nbsp; &nbsp; &nbsp; &nbsp; Consistent with the original paper, I expect no effect of time metric or incremental action on the natural log-transformed values of how much to save overall for retirement.
+&nbsp; &nbsp; &nbsp; &nbsp; Consistent with the original paper, I expect no effect of time metric or incremental action on the log-transformed values of how much to save overall for retirement. The result should be the same regardless of whether I control for demographics.
 
-```{r warning = FALSE, message = FALSE, echo = FALSE, eval = FALSE}
+```{r warning = FALSE, message = FALSE, echo = FALSE}
+#controlling for demographics
+rs.lmlogsavingstot.cov = lm(logsavingtot ~ timeMetric * incrAction + age + edu + income, d)
+anova(rs.lmlogsavingstot.cov) 
+
 #no demographic controls
-rs.lmlogsavingstot = lm(logsavingtot ~ timeMetric * incrAction, d); summary(rs.lmlogsavingstot) 
+rs.lmlogsavingstot = lm(logsavingtot ~ timeMetric * incrAction, d)
 anova(rs.lmlogsavingstot)
 
-#controlling for demographics
-rs.lmlogsavingstot.cov = lm(logsavingtot ~ timeMetric * incrAction + age + edu + income, d); summary(rs.lmlogsavingstot.cov) 
+
 ```
 
 
-#### Comparing means from our sample to those in original paper
+##### Comparing means from our sample to those in original paper
 
 &nbsp; &nbsp; &nbsp; &nbsp; Because our sample may different somewhat from the sample in the original paper, it is important to compare sample means. I will run t-tests to compare means of when to start saving in each condition, and how much to save (log transformed) to those in the original paper.
 
-**Means of when to start saving**
+<br>&nbsp; &nbsp; &nbsp; &nbsp; **Delay to begin saving means.**
 
 In the original paper, participants in the fine-grained condition reported wanting to wait an average of 0.45 years.
 ```{r warning = FALSE, message = FALSE, echo = FALSE, eval = FALSE}
@@ -433,43 +489,43 @@ In the original paper, participants in the gross-grained condition reported want
 t.test(d$delaytimeyrs[d$timeMetric == "gross"], mu = 1.70) #comparing to mean(gross) in original study
 ```
 
-**Means of how much to save**
+<br>&nbsp; &nbsp; &nbsp; &nbsp; **Amount to save means.**
 
 In the original paper, participants in the fine-grained, incremental condition reported wanting to save $224,134 (12.32 in log).
 
-```{r warning = FALSE, message = FALSE, echo = FALSE, eval = FALSE}
-t.test(d$logsavingtot[d$timeMetric == "fine" & d$incrAction == "incremental"], mu = 12.32)
-t.test(d$savingtot[d$timeMetric == "fine" & d$incrAction == "incremental"], mu = 224134) 
+```{r warnings = FALSE, message = FALSE, echo = FALSE, eval = FALSE}
+#t.test(d$logsavingtot[d$timeMetric == "fine" & d$incrAction == "incremental"], mu = 12.32)
+#t.test(d$savingtot[d$timeMetric == "fine" & d$incrAction == "incremental"], mu = 224134) 
 ```
 
 In the original paper, participants in the fine-grained, overall condition reported wanting to save $215,345 (12.28 in log).
 ```{r warning = FALSE, message = FALSE, echo = FALSE, eval = FALSE}
-t.test(d$logsavingtot[d$timeMetric == "fine" & d$incrAction == "overall"], mu = 12.28) 
-t.test(d$savingtot[d$timeMetric == "fine" & d$incrAction == "overall"], mu = 215345) 
+#t.test(d$logsavingtot[d$timeMetric == "fine" & d$incrAction == "overall"], mu = 12.28) 
+#t.test(d$savingtot[d$timeMetric == "fine" & d$incrAction == "overall"], mu = 215345) 
 ```
 
 In the original paper, participants in the gross-grained, incremental condition reported wanting to save $240,385 (12.39 in log).
 ```{r warning = FALSE, message = FALSE, echo = FALSE, eval = FALSE}
-t.test(d$logsavingtot[d$timeMetric == "gross" & d$incrAction == "incremental"], mu = 12.39) 
-t.test(d$savingtot[d$timeMetric == "gross" & d$incrAction == "incremental"], mu = 240385) 
+#t.test(d$logsavingtot[d$timeMetric == "gross" & d$incrAction == "incremental"], mu = 12.39) 
+#t.test(d$savingtot[d$timeMetric == "gross" & d$incrAction == "incremental"], mu = 240385) 
 ```
 
 In the original paper, participants in the gross-grained, overall condition reported wanting to save $451,350 (13.02 in log).
 ````{r warning = FALSE, message = FALSE, echo = FALSE, eval = FALSE}
-t.test(d$logsavingtot[d$timeMetric == "gross" & d$incrAction == "overall"], mu = 13.02) 
-t.test(d$logsavingtot[d$timeMetric == "gross" & d$incrAction == "overall"], mu = 451350) 
+#t.test(d$logsavingtot[d$timeMetric == "gross" & d$incrAction == "overall"], mu = 13.02) 
+#t.test(d$logsavingtot[d$timeMetric == "gross" & d$incrAction == "overall"], mu = 451350) 
 ```
 
 
------
+----------
 
-####Exploratory analyses
+#### Exploratory analyses
 
 **Effect of time metric and incremental action on total savings amount (raw, not log-transformed)**
 
 &nbsp; &nbsp; &nbsp; &nbsp; Because the analyses in the original paper were on the log-transformed data, I am interested in exploring whether there are any effects of time metric or incremental action condition on the raw total amount participants would save for retirement. 
 
-```{r warning = FALSE, message = FALSE, echo = FALSE, fig.width=5, fig.height=3}
+```{r warning = FALSE, message = FALSE, echo = FALSE, eval = FALSE, fig.width=5, fig.height=3}
 savingtotmean = d %>% 
   group_by(timeMetric, incrAction) %>%
   summarise(mean=mean(savingtot, na.rm = T), sd=sd(savingtot, na.rm = T), n = sum(!is.na(savingtot)), sem = sem(savingtot))
@@ -481,13 +537,13 @@ ggplot(savingtotmean[!is.na(savingtotmean$timeMetric), ], aes(x=timeMetric, y = 
            size=.3) +
   geom_errorbar(aes(ymin=mean-sem, ymax=mean+sem),
                 size=.4,
-                width=.2,                    # Width of the error bars
+                width=.1,                    # Width of the error bars
                 position=position_dodge(.9)) +
   guides(fill=guide_legend(title="Incremental action")) +
   xlab("Time Metric Condition") +
   ylab("Total Retirement Savings ($)") +
   ggtitle("Total Retirement Savings by Condition") +
-  theme_bw(base_size = 11)
+  theme_linedraw(base_size = 11)
 ```
 
 
@@ -506,9 +562,9 @@ rs.lmsavingstot.cov = lm(savingtot ~ timeMetric * incrAction + age + edu + incom
 
 **When to begin saving - visualizing effects across all 4 conditions **
 
-We should also plot when to start saving (in years) across all 4 conditions, rather than only across the time metric conditions (which is consistent with the original paper). This includes the incremental action condition. We would expect that there would be no effect of incremental action condition because this condition was not assigned/did not come into play until after the when to save question was asked.
+&nbsp; &nbsp; &nbsp; &nbsp; We should also plot when to start saving (in years) across all 4 conditions, rather than only across the time metric conditions (which is consistent with the original paper), to ensure that there were no differences across the incremental action conditions. We would expect that there would be no effect of incremental action condition because this condition was not assigned/did not come into play until after the when to save question was asked.
 
-```{r warning = FALSE, message = FALSE, echo = FALSE, fig.width=5, fig.height=3}
+```{r warning = FALSE, message = FALSE, echo = FALSE, eval = FALSE, fig.width=5, fig.height=3}
 delaytimemean2 = d %>% 
   group_by(timeMetric, incrAction) %>%
   summarise(mean=mean(delaytimeyrs, na.rm = T), sd=sd(delaytimeyrs, na.rm = T), n = sum(!is.na(delaytimeyrs)), sem = sem(delaytimeyrs))
@@ -528,8 +584,93 @@ ggplot(delaytimemean2[!is.na(delaytimemean2$timeMetric), ], aes(x=timeMetric, y 
   xlab("Time metric condition") +
   ylab("Delay to start saving (years)") +
   ggtitle("Years to Delay Retirement Saving by Condition") +
-  theme_bw(base_size = 11)
+  theme_linedraw(base_size = 11)
 ```
+
+**Examining demographics**
+
+&nbsp; &nbsp; &nbsp; &nbsp;  Demographic factors likely play a role in terms of when and how much people feel they should save, so I may explore the relationship among demographic factors and the two dependent variables in this sample.
+```{r demos, message = FALSE, warning = FALSE, echo = FALSE, eval = FALSE}
+
+# Age
+agemean = d %>%
+  group_by(timeMetric, incrAction) %>%
+  summarise(mean=mean(age, na.rm = T), sd=sd(age, na.rm = T), n = sum(!is.na(age)), se = sd/sqrt(n))
+agemean
+
+ggplot(agemean[!is.na(agemean$timeMetric), ], aes(x=timeMetric, y = mean, fill = incrAction)) + 
+  geom_bar(position=position_dodge(), stat="identity",
+           colour="black", # Use black outlines,
+           size=.3) +
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se),
+    size=.4,
+    width=.2,                    # Width of the error bars
+    position=position_dodge(.9)) +
+  xlab("Condition") +
+  ylab("Mean age") +
+  ggtitle("Age by Condition") +
+  theme_bw(base_size = 11)
+
+rslm.age = lm(age ~ timeMetric * incrAction, d); summary(rslm.age) 
+
+
+# Gender
+
+ggplot(d[!is.na(d$gendercat), ], aes(x=condition, fill = gendercat)) + 
+  geom_bar(position=position_dodge(), stat="count",
+           colour="black", # Use black outlines,
+           size=.3) +
+  xlab("Condition") +
+  ylab("Count") +
+  ggtitle("Gender by Condition") +
+  theme_bw(base_size = 11)
+
+table(d$gendercat, d$manipcond)
+chisq.test(table(d$gendercat, d$manipcond))
+
+
+# Income 
+ggplot(d[!is.na(d$incomecat), ], aes(x=condition, fill = incomecat)) + #remove the NAs from income
+  geom_bar(position=position_dodge(), stat="count",
+           colour="black", # Use black outlines,
+           size=.3) +
+  xlab("Condition") +
+  ylab("Count") +
+  ggtitle("Household income by Condition") +
+  theme_bw(base_size = 11)
+
+table(d$incomecat, d$condition)
+chisq.test(table(d$incomecat, d$condition))
+
+# Education
+
+ggplot(d[!is.na(d$educat), ], aes(x=condition, fill = educat)) + #remove the NAs from income
+  geom_bar(position=position_dodge(), stat="count",
+           colour="black", # Use black outlines,
+           size=.3) +
+  xlab("Condition") +
+  ylab("Count") +
+  ggtitle("Education by Condition") +
+  theme_bw(base_size = 11)
+
+table(d$educat, d$condition)
+chisq.test(table(d$educat, d$condition))
+
+# Race
+
+ggplot(d[!is.na(d$racecat), ], aes(x=condition, fill = racecat)) + #remove the NAs from income
+  geom_bar(position=position_dodge(), stat="count",
+           colour="black", # Use black outlines,
+           size=.3) +
+  xlab("Condition") +
+  ylab("Count") +
+  ggtitle("Race by Condition") +
+  theme_bw(base_size = 11)
+
+table(d$racecat, d$condition)
+chisq.test(table(d$racecat, d$condition))
+```
+
 
 
 **Examining correlations among variables**
@@ -563,7 +704,7 @@ ggplot(d, aes(incomecat, delaytimeyrs)) +
   geom_abline(intercept = rslm.incdelay$coefficients[1], slope = rslm.incdelay$coefficients[2]) +
   xlab("Household income") +
   ylab("When should you save?") +
-  theme_bw(base_size = 12) + 
+  theme_linedraw(base_size = 12) + 
   theme(axis.text.x = element_text(angle = 20, hjust = 1)) 
 
 rslm.edudelay = lm(delaytimeyrs ~ income, d)
@@ -573,7 +714,7 @@ ggplot(d, aes(educat, delaytimeyrs)) +
   geom_abline(intercept = rslm.edudelay$coefficients[1], slope = rslm.edudelay$coefficients[2]) +
   xlab("Education") +
   ylab("When should you save?") +
-  theme_bw(base_size = 12) + 
+  theme_linedraw(base_size = 12) + 
   theme(axis.text.x = element_text(angle = 20, hjust = 1)) 
 
 rslm.agedelay = lm(delaytimeyrs ~ age, d)
@@ -583,7 +724,7 @@ ggplot(d, aes(age, delaytimeyrs)) +
   geom_abline(intercept = rslm.agedelay$coefficients[1], slope = rslm.agedelay$coefficients[2]) +
   xlab("Age") +
   ylab("When should you save?") +
-  theme_bw(base_size = 12)
+  theme_linedraw(base_size = 12)
 ```
 
 ```{r warning = FALSE, message = FALSE, echo = FALSE, eval = FALSE, fig.width=4, fig.height=3}
@@ -597,7 +738,7 @@ ggplot(d, aes(incomecat, savingtot)) +
   geom_abline(intercept = rslm.incsaving$coefficients[1], slope = rslm.incsaving$coefficients[2]) +
   xlab("Household income") +
   ylab("Total savings ($)") +
-  theme_bw(base_size = 12) + 
+  theme_linedraw(base_size = 12) + 
   theme(axis.text.x = element_text(angle = 20, hjust = 1)) 
 
 rslm.edusaving = lm(savingtot ~ edu, d)
@@ -607,7 +748,7 @@ ggplot(d, aes(educat, savingtot)) +
   geom_abline(intercept = rslm.edusaving$coefficients[1], slope = rslm.edusaving$coefficients[2]) +
   xlab("Education") +
   ylab("Total savings ($)") +
-  theme_bw(base_size = 12) + 
+  theme_linedraw(base_size = 12) + 
   theme(axis.text.x = element_text(angle = 20, hjust = 1)) 
 
 rslm.agesaving = lm(savingtot ~ age, d)
@@ -617,7 +758,7 @@ ggplot(d, aes(age, savingtot)) +
   geom_abline(intercept = rslm.agesaving$coefficients[1], slope = rslm.agesaving$coefficients[2]) +
   xlab("Age") +
   ylab("Total savings ($)") +
-  theme_bw(base_size = 12)
+  theme_linedraw(base_size = 12)
 ```
 
 
@@ -625,7 +766,7 @@ ggplot(d, aes(age, savingtot)) +
 
 <center>**References**</center>
 <br>Ipeirotis, P. (2015). Demographics of Mechanical Turk: Now Live! (April 2015 edition). Retrieved January 31, 2015 from http://www.behind-the-enemy-lines.com/2015/04/demographics-of-mechanical-turk-now.html 
-<br>Lewis, N. A., & Oyserman, D. (2015). When does the future begin? Time metrics matter, connecting present and future selves. Psychological Science, 26(6), 816-825.
+<br>Lewis, N. A., & Oyserman, D. (2015). When does the future begin? Time metrics matter, connecting present and future selves. *Psychological Science, 26*(6), 816-825.
   
   
 
