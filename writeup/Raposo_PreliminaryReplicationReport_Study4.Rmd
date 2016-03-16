@@ -1,7 +1,7 @@
 ---
-title: "Preliminary Replication Report" 
+title: "Replication Report" 
 author: "Sarah Raposo"
-date: "March 7, 2016"
+date: "March 16, 2016"
 output: html_document
 ---
 
@@ -28,7 +28,7 @@ output: html_document
 
 **Planned Sample**
 
-&nbsp; &nbsp; &nbsp; &nbsp; Participants in the original study were 127 MTurk workers with U.S. IP addresses, and who ranged in age from 18-61 (*M* = 31.48, *sd* = 10.04). Participants were mostly White (78.0%), most had completed college (92.9%), and earn less than $50,000 (78.7%). This sample appears to be representative of the population of MTurk workers (e.g., Ipeirotis, 2015); thus, I restricted participants to MTurk workers with U.S. IP addresses. I ceased collecting data once I reacheded my planned sample size of 123 + 5% = 130.
+&nbsp; &nbsp; &nbsp; &nbsp; Participants in the original study were 127 MTurk workers with U.S. IP addresses, and who ranged in age from 18-61 (*M* = 31.48, *sd* = 10.04). Participants were mostly White (78.0%), most had completed college (92.9%), and earn less than $50,000 (78.7%). This sample appears to be representative of the population of MTurk workers (e.g., Ipeirotis, 2015); thus, I restricted participants to MTurk workers with U.S. IP addresses. I ceased collecting data once I reacheded my planned sample size of 123 + 5% = 130. The additional 5% is to ensure we achieve desired power if some participants do not answer all questions or are excluded based on the criteria below.
 
 **Materials**
 <br>&nbsp; &nbsp; &nbsp; &nbsp; **Independent variables.** The two independent variables were time metric and chance for incremental action.
@@ -49,7 +49,7 @@ output: html_document
 
 &nbsp; &nbsp; &nbsp; &nbsp; The authors excluded five participants who gave responses that fell > 3 *sd* from the mean on *when* to save. They also excluded 1 additional individual. It is unclear why this was, but was likely due to missing data. Following this approach, I excluded participants whose responses fell > 3 *sd* from the mean of when to save or who did not respond to the two items of interest. I also excluded data from participants who indicated that they would wait to begin saving longer than the prompt indicated (e.g., longer than 30 years in the gross-grained condition).
 
-&nbsp; &nbsp; &nbsp; &nbsp; I began by visualizing my data by using histograms and boxplots (to see ranges and detect outliers). Next, I will use bar plots and line graphs to better visualize my data by condition. 
+&nbsp; &nbsp; &nbsp; &nbsp; I began by visualizing my data by using histograms and boxplots (to examine distributions and detect outliers). Next, I used bar plots and line graphs to better visualize my data by condition. 
 
 &nbsp; &nbsp; &nbsp; &nbsp; To answer the main research questions, I ran 2 regression models to examine the interactive effects of time metric and incremental action on: a) when to begin saving (**target analysis**), b) savings amount natural log-transformed (base e; secondary analysis). I will run both models with and without demographic covariates (age, education, income) consistent with the original paper (the target analysis included the demographic covariates). To further explore the data, I also ran a regression model on total savings amount. 
 
@@ -244,15 +244,6 @@ qplot(logsavingtot, data = d0) +
   facet_wrap(~condition) +
   xlab("Total Retirement Savings - Log")
 
-#Histogram of total retirement savings
-qplot(savingtot, data = d0) +
-  xlab("Total Retirement Savings ($)")
-
-#Histogram of total retirement savings by condition
-qplot(savingtot, data = d0) +
-  facet_wrap(~condition) +
-  xlab("Total Retirement Savings ($)")
-
 
 ```
 
@@ -346,7 +337,7 @@ ggplot(delaytimemean[!is.na(delaytimemean$timeMetric), ], aes(x=timeMetric, y = 
   xlab("Time metric condition") +
   ylab("Delay to start saving (years)") +
   ggtitle("Years to Delay Retirement Saving by \n Condition - Replication") +
-  theme_linedraw(base_size = 11)
+  theme_linedraw(base_size = 12)
 
 # plotting means and standard errors for original results
 origdelay <- matrix(c(.45, 1.70, .40, .35, "fine", "gross"), ncol=3)
@@ -367,7 +358,7 @@ ggplot(delaytable, aes(x = condition, y = mean)) +
   xlab("Time metric condition") +
   ylab("Delay to start saving (years)") +
   ggtitle("Years to Delay Retirement Saving by \n Condition - Original") +
-  theme_linedraw(base_size = 11)
+  theme_linedraw(base_size = 12)
 ```
 
 
@@ -390,11 +381,11 @@ ggplot(logsavingtotmean[!is.na(logsavingtotmean$timeMetric), ], aes(x=timeMetric
                 width=.2,                    # Width of the error bars
                 position=position_dodge(.9)) +
   guides(fill=guide_legend(title="Incremental action")) +
-#  ylim(c(0,13)) + #to match original study
+  coord_cartesian(ylim=c(11, 13.5)) + #to match original graph
   xlab("Time metric condition") + 
   ylab("Log total retirement savings ($)") +
   ggtitle("Retirement Savings (log) by \n Condition - Replication") +
-  theme_linedraw(base_size = 11)
+  theme_linedraw(base_size = 12)
 
 # Creating graph based on original sample means and standard errors
 origsaving <- matrix(c(12.32, 12.28, 12.39, 13.02, 0.25, 0.30, 0.20, 0.25, "fine", "fine", "gross", "gross", "incremental", "overall", "incremental", "overall"), ncol=4)
@@ -413,11 +404,11 @@ ggplot(savingtable, aes(x = timemetric, y = mean, fill = action)) +
             size=.4,
             width=.2,                    # Width of the error bars
             position=position_dodge(.9)) +
-  coord_cartesian(ylim=c(11,13.5)) + 
+  coord_cartesian(ylim=c(11,13.5)) + #from original graph
   xlab("Time metric condition") +
   ylab("Log total retirement savings ($)") +
   ggtitle("Retirement Savings (log) by \n Condition - Original") +
-  theme_linedraw(base_size = 11)
+  theme_linedraw(base_size = 12)
 ```
 
 
@@ -447,7 +438,9 @@ dfdenom2 = rs.lmdelaytot$df.residual
 pval2 = delayres[1,5]
 
 ```
-For the critical analysis the main effect of time metric is: F(`r dfnum1`, `r dfdenom1`) = `r round(Fstat1, 3)`, p = `r round(pval1, 4)`. When not controlling for demographics, the main effect of time metric is:  F(`r dfnum2`, `r dfdenom2`) = `r round(Fstat2, 3)`, p = `r round(pval2, 4)`.
+For our **critical analysis** the main effect of time metric is: F(`r dfnum1`, `r dfdenom1`) = `r round(Fstat1, 3)`, p = `r round(pval1, 4)` (original results: F(1, 115) = 7.497, p = .007).
+
+When not controlling for demographics, the main effect of time metric is: F(`r dfnum2`, `r dfdenom2`) = `r round(Fstat2, 3)`, p = `r round(pval2, 4)` (original results: F(1, 118) = 7.166, p = .008).
 
 
 #### <br>Secondary analysis: Effect of time metric and incremental action on how much to save (log transformed)
@@ -464,19 +457,30 @@ dfnum3a = savecovres[4,1]
 dfdenom3a = rs.lmlogsavingstot.cov$df.residual
 pval3a = savecovres[4,5]
 
-Fstat3b = savecovres[5,4] #incraction
+Fstat3b = savecovres[5,4] #incrAction
 dfnum3b = savecovres[5,1]
 dfdenom3b = rs.lmlogsavingstot.cov$df.residual
 pval3b = savecovres[5,5]
 
-
 #no demographic controls
 rs.lmlogsavingstot = lm(logsavingtot ~ timeMetric * incrAction, d)
-anova(rs.lmlogsavingstot)
+saveres = anova(rs.lmlogsavingstot)
+Fstat3c = saveres[1,4] #time metric
+dfnum3c = saveres[1,1]
+dfdenom3c = rs.lmlogsavingstot$df.residual
+pval3c = saveres[1,5]
 
+Fstat3d = saveres[2,4] #incrAction
+dfnum3d = saveres[2,1]
+dfdenom3d = rs.lmlogsavingstot$df.residual
+pval3d = saveres[2,5]
 
 ```
-For the secondary analysis (controlling for demographics) the main effect of incremental action is: F(`r dfnum3b`, `r dfdenom3b`) = `r round(Fstat3b, 3)`, p = `r round(pval3b, 4)` and the main effect of time metric is: F(`r dfnum3a`, `r dfdenom3a`) = `r round(Fstat3a, 3)`, p = `r round(pval3a, 4)`.
+For the secondary analysis (controlling for demographics) the main effect of incremental action is: F(`r dfnum3b`, `r dfdenom3b`) = `r round(Fstat3b, 3)`, p = `r round(pval3b, 4)` (original result: p = .227) and the main effect of time metric is: F(`r dfnum3a`, `r dfdenom3a`) = `r round(Fstat3a, 3)`, p = `r round(pval3a, 4)` (p = .164).
+
+When not controlling for demographics, the main effect of incremental action is: F(`r dfnum3d`, `r dfdenom3d`) = `r round(Fstat3d, 3)`, p = `r round(pval3d, 4)` (original result: p = .229) and the main effect of time metric is: F(`r dfnum3c`, `r dfdenom3c`) = `r round(Fstat3c, 3)`, p = `r round(pval3c, 4)` (p = .140).
+
+
 
 #### Comparing means from our sample to those in original paper
 
@@ -489,13 +493,57 @@ delaymeanstab = matrix(c("fine", "gross", .45, 1.70, round(mean(d$delaytimeyrs[d
 colnames(delaymeanstab) <- c('condition', 'original', 'replication')
 kable(delaymeanstab, format = "markdown", col.names = c('condition', 'original', 'replication'), digits = 3)
 
-t.test(d$delaytimeyrs[d$timeMetric == "fine"], mu = .45) #comparing to mean(fine) in original study
+# Original and replication means for fine-grained condition
+delayyrs.mfine = mean(d$delaytimeyrs[d$timeMetric == "fine"])
+delayyrs.sdfine = sd(d$delaytimeyrs[d$timeMetric == "fine"])
+delayyrs.nfine = length(d$delaytimeyrs[d$timeMetric == "fine"])
+origdelayyrs.mfine = 0.45
+origdelayyrs.sdfine = 3.12
+origdelayyrs.nfine = 61
 
-t.test(d$delaytimeyrs[d$timeMetric == "gross"], mu = 1.70) #comparing to mean(gross) in original study
+# Original and replication means for gross-grained condition
+delayyrs.mgross = mean(d$delaytimeyrs[d$timeMetric == "gross"])
+delayyrs.sdgross = sd(d$delaytimeyrs[d$timeMetric == "gross"])
+delayyrs.ngross = length(d$delaytimeyrs[d$timeMetric == "gross"])
+origdelayyrs.mgross = 1.70
+origdelayyrs.sdgross = 2.73
+origdelayyrs.ngross = 61
+
+# m1, m2: the sample means
+# s1, s2: the sample standard deviations
+# n1, n2: the same sizes
+# m0: the null value for the difference in means to be tested for. Default is 0. 
+# equal.variance: whether or not to assume equal variance. Default is FALSE. 
+t.test2 <- function(m1,m2,s1,s2,n1,n2,m0=0,equal.variance=FALSE)
+{
+  if( equal.variance==FALSE ) 
+  {
+    se <- sqrt( (s1^2/n1) + (s2^2/n2) )
+    # welch-satterthwaite df
+    df <- ( (s1^2/n1 + s2^2/n2)^2 )/( (s1^2/n1)^2/(n1-1) + (s2^2/n2)^2/(n2-1) )
+  } else
+  {
+    # pooled standard deviation, scaled by the sample sizes
+    se <- sqrt( (1/n1 + 1/n2) * ((n1-1)*s1^2 + (n2-1)*s2^2)/(n1+n2-2) ) 
+    df <- n1+n2-2
+  }      
+  t <- (m1-m2-m0)/se 
+  dat <- c(m1-m2, se, t, 2*pt(-abs(t),df))    
+  names(dat) <- c("Difference of means", "Std Error", "t", "p-value")
+  return(dat) 
+}
+
+# ttest comparing delay time (years) for fine-grained condition between original and replication
+tdelayfine = t.test2(delayyrs.mfine, origdelayyrs.mfine, delayyrs.sdfine, origdelayyrs.sdfine, delayyrs.nfine, origdelayyrs.nfine)
+
+# ttest comparing delay time (years) for gross-grained condition between original and replication
+tdelaygross = t.test2(delayyrs.mgross, origdelayyrs.mgross, delayyrs.sdgross, origdelayyrs.sdgross, delayyrs.ngross, origdelayyrs.ngross)
+
 ```
+When comparing the original and replication means of the fine-grained condition on how long to wait to save for retirement, the results are: t = `r round(tdelayfine[3], 3)`, p = `r round(tdelayfine[4], 3)`. When comparing the original and replication means of the gross-grained condition on how long to wait to save, the results are: t = `r round(tdelaygross[3], 3)`, p = `r round(tdelaygross[4], 3)`.
+
 
 <br>&nbsp; &nbsp; &nbsp; &nbsp; **Amount to save means.**
-
 
 ```{r warnings = FALSE, message = FALSE}
 savingmeanstab = matrix(c("fine", "fine", "gross", "gross", "incremental", "overall", "incremental", "overall", 12.32, 12.28, 12.39, 13.02, round(mean(d$logsavingtot[d$timeMetric == "fine" & d$incrAction == "incremental"]), 2), round(mean(d$logsavingtot[d$timeMetric == "fine" & d$incrAction == "overall"]), 2), round(mean(d$logsavingtot[d$timeMetric == "gross" & d$incrAction == "incremental"]), 2), round(mean(d$logsavingtot[d$timeMetric == "gross" & d$incrAction == "overall"]), 2)), ncol = 4)
@@ -504,20 +552,55 @@ kable(savingmeanstab, format = "markdown", col.names = c('time metric', 'increme
 
 ```
 
-```{r warnings = FALSE, message = FALSE, eval = FALSE}
-#t.test(d$logsavingtot[d$timeMetric == "fine" & d$incrAction == "incremental"], mu = 12.32)
-#t.test(d$savingtot[d$timeMetric == "fine" & d$incrAction == "incremental"], mu = 224134) 
+```{r warnings = FALSE, message = FALSE}
+# Original and replication means for incremental, fine-grained condition
+savingm.incfine = mean(d$logsavingtot[d$timeMetric == "fine" & d$incrAction == "incremental"])
+savingsd.incfine = sd(d$logsavingtot[d$timeMetric == "fine" & d$incrAction == "incremental"])
+savingn.incfine = length(d$logsavingtot[d$timeMetric == "fine" & d$incrAction == "incremental"])
+origsavingm.incfine = 12.32
+origsavingsd.incfine = 1.39
+origsavingn.incfine = 31
 
-#t.test(d$logsavingtot[d$timeMetric == "fine" & d$incrAction == "overall"], mu = 12.28) 
-#t.test(d$savingtot[d$timeMetric == "fine" & d$incrAction == "overall"], mu = 215345) 
+# Original and replication means for overall, fine-grained condition
+savingm.overfine = mean(d$logsavingtot[d$timeMetric == "fine" & d$incrAction == "overall"])
+savingsd.overfine = sd(d$logsavingtot[d$timeMetric == "fine" & d$incrAction == "overall"])
+savingn.overfine = length(d$logsavingtot[d$timeMetric == "fine" & d$incrAction == "overall"])
+origsavingm.overfine = 12.28
+origsavingsd.overfine = 1.67
+origsavingn.overfine = 31
 
-#t.test(d$logsavingtot[d$timeMetric == "gross" & d$incrAction == "incremental"], mu = 12.39) 
-#t.test(d$savingtot[d$timeMetric == "gross" & d$incrAction == "incremental"], mu = 240385) 
+# Original and replication means for incremental, gross-grained condition
+savingm.incgross = mean(d$logsavingtot[d$timeMetric == "gross" & d$incrAction == "incremental"])
+savingsd.incgross = sd(d$logsavingtot[d$timeMetric == "gross" & d$incrAction == "incremental"])
+savingn.incgross = length(d$logsavingtot[d$timeMetric == "gross" & d$incrAction == "incremental"])
+origsavingm.incgross = 12.39
+origsavingsd.incgross = 1.11
+origsavingn.incgross = 31
 
-#t.test(d$logsavingtot[d$timeMetric == "gross" & d$incrAction == "overall"], mu = 13.02) 
-#t.test(d$logsavingtot[d$timeMetric == "gross" & d$incrAction == "overall"], mu = 451350) 
+# Original and replication means for overall, gross-grained condition
+savingm.overgross = mean(d$logsavingtot[d$timeMetric == "gross" & d$incrAction == "overall"])
+savingsd.overgross = sd(d$logsavingtot[d$timeMetric == "gross" & d$incrAction == "overall"])
+savingn.overgross = length(d$logsavingtot[d$timeMetric == "gross" & d$incrAction == "overall"])
+origsavingm.overgross = 13.02
+origsavingsd.overgross = 1.39
+origsavingn.overgross = 31
+
+# ttest comparing log(savings) for incremental, fine-grained condition between original and replication
+tsavingincfine = t.test2(savingm.incfine, origsavingm.incfine, savingsd.incfine, origsavingsd.incfine, savingn.incfine, origsavingn.incfine)
+
+# ttest comparing log(savings) for overall, fine-grained condition between original and replication
+tsavingoverfine = t.test2(savingm.overfine, origsavingm.overfine, savingsd.overfine, origsavingsd.overfine, savingn.overfine, origsavingn.overfine)
+
+# ttest comparing log(savings) for incremental, gross-grained condition between original and replication
+tsavingincgross = t.test2(savingm.incgross, origsavingm.incgross, savingsd.incgross, origsavingsd.incgross, savingn.incgross, origsavingn.incgross)
+
+# ttest comparing log(savings) for overall, gross-grained condition between original and replication
+tsavingovergross = t.test2(savingm.overgross, origsavingm.overgross, savingsd.overgross, origsavingsd.overgross, savingn.overgross, origsavingn.overgross)
+
 ```
+When comparing the original and replication means of the incremental fine-grained condition on natural log-transformed retirement savings, the results are: t = `r round(tsavingincfine[3], 3)`, p = `r round(tsavingincfine[4], 3)`. When comparing the original and replication means of the overall fine-grained condition on natural log-transformed retirement savings, the results are: t = `r round(tsavingoverfine[3], 3)`, p = `r round(tsavingoverfine[4], 3)`.
 
+When comparing the original and replication means of the incremental gross-grained condition on natural log-transformed retirement savings, the results are: t = `r round(tsavingincgross[3], 3)`, p = `r round(tsavingincgross[4], 3)`. When comparing the original and replication means of the overall gross-grained condition on natural log-transformed retirement savings, the results are: t = `r round(tsavingovergross[3], 3)`, p = `r round(tsavingovergross[4], 3)`.
 
 ----------
 
@@ -528,6 +611,16 @@ kable(savingmeanstab, format = "markdown", col.names = c('time metric', 'increme
 &nbsp; &nbsp; &nbsp; &nbsp; Because the analyses in the original paper were on the log-transformed data, I am interested in exploring whether there are any effects of time metric or incremental action condition on the raw total amount participants would save for retirement. 
 
 ```{r warning = FALSE, message = FALSE, eval = FALSE, fig.width=5, fig.height=3}
+
+#Histogram of total retirement savings
+qplot(savingtot, data = d0) +
+  xlab("Total Retirement Savings ($)")
+
+#Histogram of total retirement savings by condition
+qplot(savingtot, data = d0) +
+  facet_wrap(~condition) +
+  xlab("Total Retirement Savings ($)")
+
 savingtotmean = d %>% 
   group_by(timeMetric, incrAction) %>%
   summarise(mean=mean(savingtot, na.rm = T), sd=sd(savingtot, na.rm = T), n = sum(!is.na(savingtot)), sem = sem(savingtot))
