@@ -69,7 +69,7 @@ output: html_document
 
 **Differences from pre-data collection methods plan**
 
-&nbsp; &nbsp; &nbsp; &nbsp; None for critical analysis. 
+&nbsp; &nbsp; &nbsp; &nbsp; None for target analysis. 
 
 &nbsp; &nbsp; &nbsp; &nbsp; Secondary analysis: I did not initially plan to exlude participants who indicated they would save $0. However, some participants reported they would save $0, and when this value is log-transformed, the value goes to -infinity. Because of this, the planned secondary analyses on log-transformed savings amount would not run, and I had R NOT evaluate these analyses in the planned analysis section (though I left the analyses intact). Instead, in the Exploratory Analyses section, I excluded participants who reported they would save $0 and ran the analyses on amount to save there.
 
