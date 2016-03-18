@@ -329,7 +329,7 @@ nincl = length(unique(d$workerid)) #final sample size
 
 **Main analyses**
 
-&nbsp; &nbsp; &nbsp; &nbsp; To visualize the critical analysis I plotted group means for how long participants say they will wait to begin saving by time metric condition. To visualize the secondary analysis I plotted group means for how much participants think they should save for retirement by time metric and incremental action condition. 
+&nbsp; &nbsp; &nbsp; &nbsp; To visualize the target analysis I plotted group means for how long participants say they will wait to begin saving by time metric condition. To visualize the secondary analysis I plotted group means for how much participants think they should save for retirement by time metric and incremental action condition. 
 
 &nbsp; &nbsp; &nbsp; &nbsp; Consistent with the original results, I expected that people in the fine-grained condition will want to wait less time to begin saving for retirement compared to those in the gross-grained condition. All error bars reflect +/-1 standard error.
 
@@ -426,16 +426,16 @@ ggplot(savingtable, aes(x = timemetric, y = mean, fill = action)) +
 ```
 
 
-#### <br>Critical analysis: Effect of time metric and incremental action on when to save
+#### <br>Target analysis: Effect of time metric and incremental action on when to save
 
-&nbsp; &nbsp; &nbsp; &nbsp; Consistent with the graphs above, there were two main analyses in the original paper. The **critical analysis of interest** was an analysis of covariance on *when to begin saving for retirement* that included time metric and incremental action as independent variables and age, income, and education as covariates. The authors found only a main effect of time metric condition on when to begin saving.
+&nbsp; &nbsp; &nbsp; &nbsp; Consistent with the graphs above, there were two main analyses in the original paper. The **target analysis of interest** was an analysis of covariance on *when to begin saving for retirement* that included time metric and incremental action as independent variables and age, income, and education as covariates. The authors found only a main effect of time metric condition on when to begin saving.
 
 &nbsp; &nbsp; &nbsp; &nbsp; The secondary analysis of interest was an analysis of covariance on *how much to save for retirement* that included time metric and incremental action as independent variables and age, income, and education as covariates. There were no significant effects of time metric condition or incremental action on amount to save. For both dependent variables the authors ran the test with demographic controls (age, education, income) and without, and the results were the same. Only income significantly predicted amount to save, but controlling for demographics did not change the interpretation of either outcome.
 
-&nbsp; &nbsp; &nbsp; &nbsp; Consistent with the original paper, for my critical analysis I expect a main effect of time metric such that people in the fine-grained condition would begin to save sooner than those in the gross-grained condition. I expect a similar effect regardless of whether I control for demographics.
+&nbsp; &nbsp; &nbsp; &nbsp; Consistent with the original paper, for my target analysis I expect a main effect of time metric such that people in the fine-grained condition would begin to save sooner than those in the gross-grained condition. I expect a similar effect regardless of whether I control for demographics.
 
-```{r critical analysis, warning = FALSE, message = FALSE}
-#controlling for demographics - critical analysis
+```{r target analysis, warning = FALSE, message = FALSE}
+#controlling for demographics - target analysis
 rs.lmdelaytot.cov = lm(delaytimeyrs ~ age + income + edu + timeMetric * incrAction, d)
 delaycovres = anova(rs.lmdelaytot.cov)
 Fstat1 = delaycovres[4,4] #time metric
@@ -452,7 +452,7 @@ dfdenom2 = rs.lmdelaytot$df.residual
 pval2 = delayres[1,5]
 
 ```
-For our **critical analysis** the main effect of time metric is: F(`r dfnum1`, `r dfdenom1`) = `r round(Fstat1, 3)`, p = `r round(pval1, 4)` (original results: F(1, 115) = 7.497, p = .007).
+For our **target analysis** the main effect of time metric is: F(`r dfnum1`, `r dfdenom1`) = `r round(Fstat1, 3)`, p = `r round(pval1, 4)` (original results: F(1, 115) = 7.497, p = .007).
 
 When not controlling for demographics, the main effect of time metric is: F(`r dfnum2`, `r dfdenom2`) = `r round(Fstat2, 3)`, p = `r round(pval2, 4)` (original results: F(1, 118) = 7.166, p = .008).
 
